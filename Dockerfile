@@ -11,9 +11,16 @@ RUN apt-get update && apt-get install -y wget gnupg ca-certificates fonts-libera
     apt-get update && apt-get install -y google-chrome-stable && \
     rm -rf /var/lib/apt/lists/*
 
+# ...
 WORKDIR /app
-COPY package.json ./
-RUN npm ci
+
+# Copia package.json e (se existir) o lockfile
+COPY package.json package-lock.json* ./
+
+# Instala dependências (sem dev)
+RUN npm install --omit=dev --no-audit --no-fund
+
+# Agora copia o resto do projeto
 COPY . .
 
 ENV CHROME_PATH=/usr/bin/google-chrome
