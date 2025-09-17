@@ -18,7 +18,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Instala dependências (sem dev)
-RUN npm install --omit=dev --no-audit --no-fund
+RUN npm install --omit=dev --no-audit --no-fund --ignore-scripts
 
 # Agora copia o resto do projeto
 COPY . .
@@ -28,3 +28,4 @@ ENV PORT=3333
 EXPOSE 3333
 
 CMD ["npm","start"]
+
