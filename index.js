@@ -81,24 +81,33 @@ startVenom();
 
 function startVenom() {
   console.log('▶️  Iniciando Venom...');
-  venom.create({
-    session: 'mx-session',
-    multidevice: true,
-    headless: false,     // GUI para depurar; depois pode trocar para headless:true + '--headless=new'
-    waitForLogin: true,
-    logQR: true,
-    disableSpins: true
-  })
-  .then((c)=>{
-    client = c;
-    console.log('✅ Venom iniciado');
-    wireVenom();
-    monitorConnection();
-  })
-  .catch(e=>{
-    console.error('❌ Erro ao iniciar Venom:', e?.message||e);
-  });
-}
+venom
+  .create(
+    {
+      session: 'mx-session',
+      multidevice: true,
+      headless: true, // ou 'new' em versões mais novas do Chrome
+      useChrome: true,
+      // Venom já pega CHROME_PATH do env, mas reforço abaixo se quiser:
+      // executablePath: process.env.CHROME_PATH || '/usr/bin/google-chrome',
+      disableSpins: true,
+      logQR: process.env.LOG_QR === 'true',
+      browserArgs: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-extensions',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--window-size=1280,720'
+      ]
+    }
+  )
+  .then((client) => start(client))
+  .catch((e) => console.error('Erro ao iniciar Venom:', e));
+
 
 function wireVenom() {
   if (client?.onStateChange) {
@@ -141,3 +150,4 @@ function monitorConnection() {
   };
   tick();
 }
+
