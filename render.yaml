@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: venom-api-mx
+    env: docker
+    plan: starter
+    autoDeploy: true
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 3333
+      - key: SESSION
+        value: mx-session
+      - key: N8N_INBOX_URL
+        sync: false   # preencha no painel do Render com a URL do seu webhook n8n
